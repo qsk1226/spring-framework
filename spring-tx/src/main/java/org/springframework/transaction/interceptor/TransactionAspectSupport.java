@@ -295,7 +295,8 @@ public abstract class TransactionAspectSupport implements BeanFactoryAware, Init
 		// 获取事务属性类 AnnotationTransactionAttributeSource
 		TransactionAttributeSource tas = getTransactionAttributeSource();
 		// 获取方法上面有 @Transactional 注解的属性
-		final TransactionAttribute txAttr = (tas != null ? tas.getTransactionAttribute(method, targetClass) : null);
+		final TransactionAttribute txAttr = tas != null ? tas.getTransactionAttribute(method, targetClass) : null;
+
 		// 获取事务管理器
 		final PlatformTransactionManager tm = determineTransactionManager(txAttr);
 		//
@@ -389,11 +390,14 @@ public abstract class TransactionAspectSupport implements BeanFactoryAware, Init
 
 		String qualifier = txAttr.getQualifier();
 		if (StringUtils.hasText(qualifier)) {
+			/* 获取TransactionManager对象 */
 			return determineQualifiedTransactionManager(this.beanFactory, qualifier);
 		} else if (StringUtils.hasText(this.transactionManagerBeanName)) {
 			return determineQualifiedTransactionManager(this.beanFactory, this.transactionManagerBeanName);
 		} else {
+
 			PlatformTransactionManager defaultTransactionManager = getTransactionManager();
+
 			if (defaultTransactionManager == null) {
 				defaultTransactionManager = this.transactionManagerCache.get(DEFAULT_TRANSACTION_MANAGER_KEY);
 				if (defaultTransactionManager == null) {
@@ -409,8 +413,9 @@ public abstract class TransactionAspectSupport implements BeanFactoryAware, Init
 	private PlatformTransactionManager determineQualifiedTransactionManager(BeanFactory beanFactory, String qualifier) {
 		PlatformTransactionManager txManager = this.transactionManagerCache.get(qualifier);
 		if (txManager == null) {
-			txManager = BeanFactoryAnnotationUtils.qualifiedBeanOfType(
-					beanFactory, PlatformTransactionManager.class, qualifier);
+
+			txManager = BeanFactoryAnnotationUtils.qualifiedBeanOfType(beanFactory, PlatformTransactionManager.class, qualifier);
+
 			this.transactionManagerCache.putIfAbsent(qualifier, txManager);
 		}
 		return txManager;

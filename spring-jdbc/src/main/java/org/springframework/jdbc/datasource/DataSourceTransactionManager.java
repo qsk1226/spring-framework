@@ -239,15 +239,15 @@ public class DataSourceTransactionManager extends AbstractPlatformTransactionMan
 
 	@Override
 	protected Object doGetTransaction() {
-		// 管理Connection对象，创建回滚点，按照回滚点回滚，释放回滚点
+
+		/* 管理Connection对象，创建回滚点，按照回滚点回滚，释放回滚点*/
 		DataSourceTransactionObject txObject = new DataSourceTransactionObject();
 
-		// DataSourceTransactionManager默认是允许嵌套事务的
+		/* DataSourceTransactionManager默认是允许嵌套事务的*/
 		txObject.setSavepointAllowed(isNestedTransactionAllowed());
 
 		// ObtainDataSource()获取数据源对象，其实就是数据库连接块对象
 		ConnectionHolder conHolder = (ConnectionHolder) TransactionSynchronizationManager.getResource(obtainDataSource());
-
 
 		txObject.setConnectionHolder(conHolder, false);
 		return txObject;
@@ -329,6 +329,7 @@ public class DataSourceTransactionManager extends AbstractPlatformTransactionMan
 	protected Object doSuspend(Object transaction) {
 		DataSourceTransactionObject txObject = (DataSourceTransactionObject) transaction;
 		txObject.setConnectionHolder(null);
+		// 接触绑定关系
 		return TransactionSynchronizationManager.unbindResource(obtainDataSource());
 	}
 
