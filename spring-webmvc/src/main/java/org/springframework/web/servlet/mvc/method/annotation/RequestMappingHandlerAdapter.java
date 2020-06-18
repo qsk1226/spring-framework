@@ -108,9 +108,9 @@ import org.springframework.web.util.WebUtils;
  *
  * @author Rossen Stoyanchev
  * @author Juergen Hoeller
- * @since 3.1
  * @see HandlerMethodArgumentResolver
  * @see HandlerMethodReturnValueHandler
+ * @since 3.1
  */
 public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 		implements BeanFactoryAware, InitializingBean {
@@ -201,8 +201,7 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 		this.messageConverters.add(stringHttpMessageConverter);
 		try {
 			this.messageConverters.add(new SourceHttpMessageConverter<>());
-		}
-		catch (Error err) {
+		} catch (Error err) {
 			// Ignore when no TransformerFactory implementation is available
 		}
 		this.messageConverters.add(new AllEncompassingFormHttpMessageConverter());
@@ -233,8 +232,7 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 	public void setArgumentResolvers(@Nullable List<HandlerMethodArgumentResolver> argumentResolvers) {
 		if (argumentResolvers == null) {
 			this.argumentResolvers = null;
-		}
-		else {
+		} else {
 			this.argumentResolvers = new HandlerMethodArgumentResolverComposite();
 			this.argumentResolvers.addResolvers(argumentResolvers);
 		}
@@ -255,8 +253,7 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 	public void setInitBinderArgumentResolvers(@Nullable List<HandlerMethodArgumentResolver> argumentResolvers) {
 		if (argumentResolvers == null) {
 			this.initBinderArgumentResolvers = null;
-		}
-		else {
+		} else {
 			this.initBinderArgumentResolvers = new HandlerMethodArgumentResolverComposite();
 			this.initBinderArgumentResolvers.addResolvers(argumentResolvers);
 		}
@@ -295,8 +292,7 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 	public void setReturnValueHandlers(@Nullable List<HandlerMethodReturnValueHandler> returnValueHandlers) {
 		if (returnValueHandlers == null) {
 			this.returnValueHandlers = null;
-		}
-		else {
+		} else {
 			this.returnValueHandlers = new HandlerMethodReturnValueHandlerComposite();
 			this.returnValueHandlers.addHandlers(returnValueHandlers);
 		}
@@ -418,6 +414,7 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 	 * for further processing of the concurrently produced result.
 	 * <p>If this value is not set, the default timeout of the underlying
 	 * implementation is used, e.g. 10 seconds on Tomcat with Servlet 3.
+	 *
 	 * @param timeout the timeout value in milliseconds
 	 */
 	public void setAsyncRequestTimeout(long timeout) {
@@ -426,6 +423,7 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 
 	/**
 	 * Configure {@code CallableProcessingInterceptor}'s to register on async requests.
+	 *
 	 * @param interceptors the interceptors to register
 	 */
 	public void setCallableInterceptors(List<CallableProcessingInterceptor> interceptors) {
@@ -434,6 +432,7 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 
 	/**
 	 * Configure {@code DeferredResultProcessingInterceptor}'s to register on async requests.
+	 *
 	 * @param interceptors the interceptors to register
 	 */
 	public void setDeferredResultInterceptors(List<DeferredResultProcessingInterceptor> interceptors) {
@@ -443,6 +442,7 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 	/**
 	 * Configure the registry for reactive library types to be supported as
 	 * return values from controller methods.
+	 *
 	 * @since 5.0.5
 	 */
 	public void setReactiveAdapterRegistry(ReactiveAdapterRegistry reactiveAdapterRegistry) {
@@ -451,6 +451,7 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 
 	/**
 	 * Return the configured reactive type registry of adapters.
+	 *
 	 * @since 5.0
 	 */
 	public ReactiveAdapterRegistry getReactiveAdapterRegistry() {
@@ -469,6 +470,7 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 	 * RedirectAttributes argument.
 	 * <p>The default setting is {@code false} but new applications should
 	 * consider setting it to {@code true}.
+	 *
 	 * @see RedirectAttributes
 	 */
 	public void setIgnoreDefaultModelOnRedirect(boolean ignoreDefaultModelOnRedirect) {
@@ -498,6 +500,7 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 	 * <p>In contrast to the "cacheSeconds" property which will apply to all general
 	 * handlers (but not to {@code @SessionAttributes} annotated handlers),
 	 * this setting will apply to {@code @SessionAttributes} handlers only.
+	 *
 	 * @see #setCacheSeconds
 	 * @see org.springframework.web.bind.annotation.SessionAttributes
 	 */
@@ -520,6 +523,7 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 	 * as well, since it will always be the same object reference for the
 	 * same active logical session. However, this is not guaranteed across
 	 * different servlet containers; the only 100% safe way is a session mutex.
+	 *
 	 * @see org.springframework.web.util.HttpSessionMutexListener
 	 * @see org.springframework.web.util.WebUtils#getSessionMutex(javax.servlet.http.HttpSession)
 	 */
@@ -579,28 +583,33 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 		if (getApplicationContext() == null) {
 			return;
 		}
-
+		// 找到所有使用了注解 @ControllerAdvice 的Bean组件
 		List<ControllerAdviceBean> adviceBeans = ControllerAdviceBean.findAnnotatedBeans(getApplicationContext());
+		// 对组件进行排序
 		AnnotationAwareOrderComparator.sort(adviceBeans);
 
 		List<Object> requestResponseBodyAdviceBeans = new ArrayList<>();
-
+		// 便利每个使用了注解 @ControllerAdvice 的组件
 		for (ControllerAdviceBean adviceBean : adviceBeans) {
 			Class<?> beanType = adviceBean.getBeanType();
 			if (beanType == null) {
 				throw new IllegalStateException("Unresolvable type for ControllerAdviceBean: " + adviceBean);
 			}
+			// 获取当前 ControllerAdvicebean 中所有使用了@ModelAttribute 注解的方法
 			Set<Method> attrMethods = MethodIntrospector.selectMethods(beanType, MODEL_ATTRIBUTE_METHODS);
 			if (!attrMethods.isEmpty()) {
 				this.modelAttributeAdviceCache.put(adviceBean, attrMethods);
 			}
+			// 获取当前 ControllerAdvicebean 中所有使用了@InitMethod 注解的方法
 			Set<Method> binderMethods = MethodIntrospector.selectMethods(beanType, INIT_BINDER_METHODS);
 			if (!binderMethods.isEmpty()) {
 				this.initBinderAdviceCache.put(adviceBean, binderMethods);
 			}
+			// 如果当前 ControllerAdviceBean 继承自 RequestBodyAdvice，将其登记到RequestResponseBodyAdviceBeans
 			if (RequestBodyAdvice.class.isAssignableFrom(beanType)) {
 				requestResponseBodyAdviceBeans.add(adviceBean);
 			}
+			// 如果当前 ControllerAdviceBean 继承自 ResponseBodyAdvice，将其登记到RequestResponseBodyAdviceBeans
 			if (ResponseBodyAdvice.class.isAssignableFrom(beanType)) {
 				requestResponseBodyAdviceBeans.add(adviceBean);
 			}
@@ -617,8 +626,7 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 			int resCount = getBodyAdviceCount(ResponseBodyAdvice.class);
 			if (modelSize == 0 && binderSize == 0 && reqCount == 0 && resCount == 0) {
 				logger.debug("ControllerAdvice beans: none");
-			}
-			else {
+			} else {
 				logger.debug("ControllerAdvice beans: " + modelSize + " @ModelAttribute, " + binderSize +
 						" @InitBinder, " + reqCount + " RequestBodyAdvice, " + resCount + " ResponseBodyAdvice");
 			}
@@ -752,8 +760,7 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 		// Catch-all
 		if (!CollectionUtils.isEmpty(getModelAndViewResolvers())) {
 			handlers.add(new ModelAndViewResolverMethodReturnValueHandler(getModelAndViewResolvers()));
-		}
-		else {
+		} else {
 			handlers.add(new ModelAttributeMethodProcessor(true));
 		}
 
@@ -776,7 +783,7 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 
 	@Override
 	protected ModelAndView handleInternal(HttpServletRequest request,
-			HttpServletResponse response, HandlerMethod handlerMethod) throws Exception {
+	                                      HttpServletResponse response, HandlerMethod handlerMethod) throws Exception {
 		// 响应程序返回的视图 和 数据模型
 		ModelAndView mav;
 		checkRequest(request);
@@ -789,13 +796,11 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 				synchronized (mutex) {
 					mav = invokeHandlerMethod(request, response, handlerMethod);
 				}
-			}
-			else {
+			} else {
 				// No HttpSession available -> no mutex necessary
 				mav = invokeHandlerMethod(request, response, handlerMethod);
 			}
-		}
-		else {
+		} else {
 			// Controller里面具体的方法调用
 			// No synchronization on session demanded at all...
 			mav = invokeHandlerMethod(request, response, handlerMethod);
@@ -804,8 +809,7 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 		if (!response.containsHeader(HEADER_CACHE_CONTROL)) {
 			if (getSessionAttributesHandler(handlerMethod).hasSessionAttributes()) {
 				applyCacheSeconds(response, this.cacheSecondsForSessionAttributeHandlers);
-			}
-			else {
+			} else {
 				prepareResponse(response);
 			}
 		}
@@ -846,12 +850,13 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 	/**
 	 * Invoke the {@link RequestMapping} handler method preparing a {@link ModelAndView}
 	 * if view resolution is required.
-	 * @since 4.2
+	 *
 	 * @see #createInvocableHandlerMethod(HandlerMethod)
+	 * @since 4.2
 	 */
 	@Nullable
 	protected ModelAndView invokeHandlerMethod(HttpServletRequest request,
-			HttpServletResponse response, HandlerMethod handlerMethod) throws Exception {
+	                                           HttpServletResponse response, HandlerMethod handlerMethod) throws Exception {
 
 		ServletWebRequest webRequest = new ServletWebRequest(request, response);
 		try {
@@ -910,14 +915,14 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 			}
 
 			return getModelAndView(mavContainer, modelFactory, webRequest);
-		}
-		finally {
+		} finally {
 			webRequest.requestCompleted();
 		}
 	}
 
 	/**
 	 * Create a {@link ServletInvocableHandlerMethod} from the given {@link HandlerMethod} definition.
+	 *
 	 * @param handlerMethod the {@link HandlerMethod} definition
 	 * @return the corresponding {@link ServletInvocableHandlerMethod} (or custom subclass thereof)
 	 * @since 4.2
@@ -931,11 +936,13 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 		Class<?> handlerType = handlerMethod.getBeanType();
 		Set<Method> methods = this.modelAttributeCache.get(handlerType);
 		if (methods == null) {
+			// 获取当前控制器中使用了 @ModelAttribute 的方法
 			methods = MethodIntrospector.selectMethods(handlerType, MODEL_ATTRIBUTE_METHODS);
 			this.modelAttributeCache.put(handlerType, methods);
 		}
 		List<InvocableHandlerMethod> attrMethods = new ArrayList<>();
 		// Global methods first
+		// 遍历 @ControllerAdvice bean中所有使用了 @ModelAttribute 的方法，将其包装成 InvocableHandlerMethod 放到 AttrMethods中
 		this.modelAttributeAdviceCache.forEach((clazz, methodSet) -> {
 			if (clazz.isApplicableToBeanType(handlerType)) {
 				Object bean = clazz.resolveBean();
@@ -944,6 +951,7 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 				}
 			}
 		});
+		//  遍历当前控制器勒种 所有使用了@ModelAttribute的方法，也将其包装成 InvocableHandlerMethod 放到 attrMethods中
 		for (Method method : methods) {
 			Object bean = handlerMethod.getBean();
 			attrMethods.add(createModelAttributeMethod(binderFactory, bean, method));
@@ -951,6 +959,9 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 		return new ModelFactory(attrMethods, binderFactory, sessionAttrHandler);
 	}
 
+	/**
+	 * 从指定 bean 的方法 method 其实是一个使用了注解 @ModelAttribute 的方法，构造一个 InvocableHandlerMethod 对象
+	 */
 	private InvocableHandlerMethod createModelAttributeMethod(WebDataBinderFactory factory, Object bean, Method method) {
 		InvocableHandlerMethod attrMethod = new InvocableHandlerMethod(bean, method);
 		if (this.argumentResolvers != null) {
@@ -965,6 +976,7 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 		Class<?> handlerType = handlerMethod.getBeanType();
 		Set<Method> methods = this.initBinderCache.get(handlerType);
 		if (methods == null) {
+			//  获取当前控制器中使用了 @InitBinder 的方法
 			methods = MethodIntrospector.selectMethods(handlerType, INIT_BINDER_METHODS);
 			this.initBinderCache.put(handlerType, methods);
 		}
@@ -985,6 +997,9 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 		return createDataBinderFactory(initBinderMethods);
 	}
 
+	/**
+	 * 从指定 bean 的方法 method 其实是一个使用了 @initBinder 的方法，构造一个 InvocableHandlerMethod 对象
+	 */
 	private InvocableHandlerMethod createInitBinderMethod(Object bean, Method method) {
 		InvocableHandlerMethod binderMethod = new InvocableHandlerMethod(bean, method);
 		if (this.initBinderArgumentResolvers != null) {
@@ -999,6 +1014,7 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 	 * Template method to create a new InitBinderDataBinderFactory instance.
 	 * <p>The default implementation creates a ServletRequestDataBinderFactory.
 	 * This can be overridden for custom ServletRequestDataBinder subclasses.
+	 *
 	 * @param binderMethods {@code @InitBinder} methods
 	 * @return the InitBinderDataBinderFactory instance to use
 	 * @throws Exception in case of invalid state or arguments
@@ -1011,7 +1027,7 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 
 	@Nullable
 	private ModelAndView getModelAndView(ModelAndViewContainer mavContainer,
-			ModelFactory modelFactory, NativeWebRequest webRequest) throws Exception {
+	                                     ModelFactory modelFactory, NativeWebRequest webRequest) throws Exception {
 
 		modelFactory.updateModel(webRequest, mavContainer);
 		if (mavContainer.isRequestHandled()) {
