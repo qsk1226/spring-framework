@@ -409,6 +409,7 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
 					return PREFLIGHT_AMBIGUOUS_MATCH;
 				}
 				Match secondBestMatch = matches.get(1);
+				// 如果两个 RequestMappingInfo 完全仙童，报错
 				if (comparator.compare(bestMatch, secondBestMatch) == 0) {
 					Method m1 = bestMatch.handlerMethod.getMethod();
 					Method m2 = secondBestMatch.handlerMethod.getMethod();
@@ -430,6 +431,7 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
 		for (T mapping : mappings) {
 			T match = getMatchingMapping(mapping, request);
 			if (match != null) {
+				// RequestMappingInfo 对象 和 HandlerMethod 对象封装到Match对象中，其实就是注解属性 和 Method对象的映射
 				matches.add(new Match(match, this.mappingRegistry.getMappings().get(mapping)));
 			}
 		}

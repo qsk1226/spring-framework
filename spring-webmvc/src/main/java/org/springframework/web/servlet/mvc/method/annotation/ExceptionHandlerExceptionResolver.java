@@ -476,11 +476,12 @@ public class ExceptionHandlerExceptionResolver extends AbstractHandlerMethodExce
 				handlerType = AopUtils.getTargetClass(handlerMethod.getBean());
 			}
 		}
-
+		//  这里获取到了 有@ControllerAdvice 注解的类
 		for (Map.Entry<ControllerAdviceBean, ExceptionHandlerMethodResolver> entry : this.exceptionHandlerAdviceCache.entrySet()) {
 			ControllerAdviceBean advice = entry.getKey();
 			if (advice.isApplicableToBeanType(handlerType)) {
 				ExceptionHandlerMethodResolver resolver = entry.getValue();
+				//  获取跟这个异常匹配的方法
 				Method method = resolver.resolveMethod(exception);
 				if (method != null) {
 					return new ServletInvocableHandlerMethod(advice.resolveBean(), method);
