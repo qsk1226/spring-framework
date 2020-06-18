@@ -362,10 +362,13 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
 	 */
 	@Override
 	protected HandlerMethod getHandlerInternal(HttpServletRequest request) throws Exception {
+		// 从request对象中获取 URI
 		String lookupPath = getUrlPathHelper().getLookupPathForRequest(request);
 		this.mappingRegistry.acquireReadLock();
 		try {
+			// 根据URI 从映射关系中 找到对应的 HandlerMethod 对象
 			HandlerMethod handlerMethod = lookupHandlerMethod(lookupPath, request);
+			// 把Controller 类实例化
 			return (handlerMethod != null ? handlerMethod.createWithResolvedBean() : null);
 		}
 		finally {

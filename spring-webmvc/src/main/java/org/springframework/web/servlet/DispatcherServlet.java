@@ -939,6 +939,7 @@ public class DispatcherServlet extends FrameworkServlet {
 		}
 
 		try {
+			// 核心流程
 			doDispatch(request, response);
 		}
 		finally {
@@ -999,7 +1000,7 @@ public class DispatcherServlet extends FrameworkServlet {
 		HttpServletRequest processedRequest = request;
 		HandlerExecutionChain mappedHandler = null;
 		boolean multipartRequestParsed = false;
-
+		// 异步管理
 		WebAsyncManager asyncManager = WebAsyncUtils.getAsyncManager(request);
 
 		try {
@@ -1007,10 +1008,10 @@ public class DispatcherServlet extends FrameworkServlet {
 			Exception dispatchException = null;
 
 			try {
+				// 文件上传
 				processedRequest = checkMultipart(request);
 				multipartRequestParsed = (processedRequest != request);
-
-				// Determine handler for the current request.
+				// 返回此请求的 HandlerExecutionChain (HandlerMethod 和 过滤器链的包装类)
 				mappedHandler = getHandler(processedRequest);
 				if (mappedHandler == null) {
 					noHandlerFound(processedRequest, response);
@@ -1226,8 +1227,10 @@ public class DispatcherServlet extends FrameworkServlet {
 	 */
 	@Nullable
 	protected HandlerExecutionChain getHandler(HttpServletRequest request) throws Exception {
+		// handlerMapping 实例
 		if (this.handlerMappings != null) {
 			for (HandlerMapping mapping : this.handlerMappings) {
+				//  获取 HandlerMethod 和 过滤器链的包装类 HandlerExecutionChain
 				HandlerExecutionChain handler = mapping.getHandler(request);
 				if (handler != null) {
 					return handler;
