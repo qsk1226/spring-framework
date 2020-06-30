@@ -617,7 +617,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 				 * 实例化并调用所有已注册的 BeanFactoryPostProcessor Bean 以及其实现类 BeanDefinitionRegistryPostProcessor
 				 * 这些Bean类是 BeanFactory 的 后置处理器 完成对这两个接口的调用
 				 *
-				 * Question： beanFactoryPostProcessors容器中的元素是什么时候添加进去的？
+				 * Question： beanFactoryPostProcessors 容器中的元素是什么时候添加进去的？
 				 */
 				invokeBeanFactoryPostProcessors(beanFactory);
 
@@ -995,8 +995,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	}
 
 	/**
-	 * Finish the refresh of this context, invoking the LifecycleProcessor's
-	 * onRefresh() method and publishing the
+	 * Finish the refresh of this context, invoking the LifecycleProcessor's onRefresh() method and publishing the ContextRefreshedEvent
 	 * {@link org.springframework.context.event.ContextRefreshedEvent}.
 	 */
 	protected void finishRefresh() {

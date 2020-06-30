@@ -39,6 +39,12 @@ import org.springframework.web.servlet.HandlerExceptionResolver;
  * @author Rossen Stoyanchev
  * @since 3.1
  */
+/*
+该类除了实例化WebMvcConfigurationSupport实例以外，另一个作用就是收集BeanFactory中所有WebMvcConfigurer的实现，汇集到WebMvcConfigurerComposite中，在WebMvcConfigurationSupport实例化过程中会分别调用这些实现，
+将相应的实例传入这些实现中，供开发者在此基础上添加自定义的配置。
+这也就是在WebMvcConfigurerAdapter子类上要加@EnableWebMvc的原因，
+因为要先实例化WebMvcConfigurationSupport。
+*/
 @Configuration
 public class DelegatingWebMvcConfiguration extends WebMvcConfigurationSupport {
 

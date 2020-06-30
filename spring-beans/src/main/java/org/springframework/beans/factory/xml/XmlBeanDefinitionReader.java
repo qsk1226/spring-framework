@@ -331,7 +331,7 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 			//获取Resource对象中的xml文件流对象
 			InputStream inputStream = encodedResource.getResource().getInputStream();
 			try {
-				//InputSource是jdk中的sax xml文件解析对象
+				//InputSource 是 jdk 中的 sax xml文件解析对象
 				InputSource inputSource = new InputSource(inputStream);
 				if (encodedResource.getEncoding() != null) {
 					inputSource.setEncoding(encodedResource.getEncoding());

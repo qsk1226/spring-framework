@@ -104,8 +104,8 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 	public static final int AUTOWIRE_AUTODETECT = AutowireCapableBeanFactory.AUTOWIRE_AUTODETECT;
 
 	/**
-	 *
 	 * Constant that indicates no dependency check at all.
+	 *
 	 * @see #setDependencyCheck
 	 */
 	public static final int DEPENDENCY_CHECK_NONE = 0;
@@ -160,12 +160,16 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 	 */
 	private boolean lazyInit = false;
 
-	/**对应bean标签的autowire属性*/
+	/**
+	 * 对应bean标签的autowire属性
+	 */
 	private int autowireMode = AUTOWIRE_NO;
 
 	private int dependencyCheck = DEPENDENCY_CHECK_NONE;
 
-	/**此bean所依赖的对象名称，此bean在实例化之前必须先实例化dependsOn数组中的类*/
+	/**
+	 * 此bean所依赖的对象名称，此bean在实例化之前必须先实例化dependsOn数组中的类
+	 */
 	@Nullable
 	private String[] dependsOn;
 
@@ -174,9 +178,13 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 	 * 容器在查找自动装配对象的时候，将不考虑该bean，即它不会被考虑作为其它bean自动装配的后选择，但是gaibean本身还是可以使用自动装配来注入其它bean
 	 */
 	private boolean autowireCandidate = true;
-	/**bean有多个实现类的时候，如果没有指定qualifier的话，优先使用*/
+	/**
+	 * bean有多个实现类的时候，如果没有指定qualifier的话，优先使用
+	 */
 	private boolean primary = false;
-	/** */
+	/**
+	 *
+	 */
 	private final Map<String, AutowireCandidateQualifier> qualifiers = new LinkedHashMap<>();
 
 	@Nullable

@@ -40,6 +40,8 @@ public interface AutowireCandidateResolver {
 	 * @return whether the bean definition qualifies as autowire candidate
 	 * @see org.springframework.beans.factory.config.BeanDefinition#isAutowireCandidate()
 	 */
+	// 判断给定的BeanDefinitionHolder是否可以注入 descriptor，beanDefinition#autowireCandidate默认为true，
+	// DependencyDescriptor是对字段、方法、参数的封装，便于统一处理，这里一般是对属性写方法参数的封装
 	default boolean isAutowireCandidate(BeanDefinitionHolder bdHolder, DependencyDescriptor descriptor) {
 		return bdHolder.getBeanDefinition().isAutowireCandidate();
 	}
@@ -53,6 +55,7 @@ public interface AutowireCandidateResolver {
 	 * @since 5.0
 	 * @see DependencyDescriptor#isRequired()
 	 */
+	// 判断是否必须注入，如果是字段类型 是optional 或者有 @Null 注解时 为false
 	default boolean isRequired(DependencyDescriptor descriptor) {
 		return descriptor.isRequired();
 	}
@@ -67,6 +70,7 @@ public interface AutowireCandidateResolver {
 	 * @since 5.1
 	 * @see org.springframework.beans.factory.annotation.QualifierAnnotationAutowireCandidateResolver#hasQualifier
 	 */
+	// 判断是否有@qualifier 或自定义的注解
 	default boolean hasQualifier(DependencyDescriptor descriptor) {
 		return false;
 	}
