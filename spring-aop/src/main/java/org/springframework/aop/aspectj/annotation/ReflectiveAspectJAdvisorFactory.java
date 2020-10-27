@@ -128,7 +128,7 @@ public class ReflectiveAspectJAdvisorFactory extends AbstractAspectJAdvisorFacto
 		// 这里循环排除 @Pointcut注解的方法
 		for (Method method : getAdvisorMethods(aspectClass)) {
 
-			// AspectJAdvisorFactory为给定的AspectJ通知方法构建一个Spring AOP Advisor。 非常重要
+			// AspectJAdvisorFactory 为给定的 AspectJ 通知方法构建一个Spring AOP Advisor。 非常重要
 			Advisor advisor = getAdvisor(method, lazySingletonAspectInstanceFactory, advisors.size(), aspectName);
 			if (advisor != null) {
 				advisors.add(advisor);

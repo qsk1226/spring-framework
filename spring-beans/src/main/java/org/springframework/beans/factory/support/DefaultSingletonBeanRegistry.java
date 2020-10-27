@@ -208,7 +208,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 		//根据beanName从缓存中拿实例
 		//先从一级缓存拿
 		Object singletonObject = this.singletonObjects.get(beanName);
-		//如果bean还正在创建，还没创建完成，其实就是堆内存有了，属性还没有DI依赖注入
+		//如果 bean 还正在创建，还没创建完成，其实就是堆内存有了，属性还没有DI依赖注入
 		if (singletonObject == null && isSingletonCurrentlyInCreation(beanName)) {
 			synchronized (this.singletonObjects) {
 				//从二级缓存中拿
@@ -264,7 +264,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 					this.suppressedExceptions = new LinkedHashSet<>();
 				}
 				try {
-					// 3、 bena的实例化
+					// 3、 bean的实例化
 					singletonObject = singletonFactory.getObject();
 					//将创建单例实例的 标签设置为true
 					newSingleton = true;
@@ -291,7 +291,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 				}
 				// 5、bea 实例化之后，将bean放入到singletonObjects容器中
 				if (newSingleton) {
-					//创建对象成功时，把对象缓存到singletonObjects缓存中,bean创建完成时放入一级缓存
+					//创建对象成功时，把对象缓存到singletonObjects缓存中, bean创建完成时放入一级缓存
 					addSingleton(beanName, singletonObject);
 				}
 			}

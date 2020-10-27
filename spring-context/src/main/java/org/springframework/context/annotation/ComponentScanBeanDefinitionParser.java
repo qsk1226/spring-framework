@@ -109,6 +109,7 @@ public class ComponentScanBeanDefinitionParser implements BeanDefinitionParser {
 		//创建注解的扫描器
 		// Delegate bean definition registration to scanner class.
 		ClassPathBeanDefinitionScanner scanner = createScanner(parserContext.getReaderContext(), useDefaultFilters);
+
 		scanner.setBeanDefinitionDefaults(parserContext.getDelegate().getBeanDefinitionDefaults());
 		scanner.setAutowireCandidatePatterns(parserContext.getDelegate().getAutowireCandidatePatterns());
 		// 解析资源正则表达式，匹配类名称
@@ -129,7 +130,7 @@ public class ComponentScanBeanDefinitionParser implements BeanDefinitionParser {
 		} catch (Exception ex) {
 			parserContext.getReaderContext().error(ex.getMessage(), parserContext.extractSource(element), ex.getCause());
 		}
-		//  解析 include-filters和exclude-filters属性
+		//  解析 include-filters 和 exclude-filters属性
 		parseTypeFilters(element, scanner, parserContext);
 
 		return scanner;
@@ -167,7 +168,7 @@ public class ComponentScanBeanDefinitionParser implements BeanDefinitionParser {
 				compositeDef.addNestedComponent(new BeanComponentDefinition(processorDefinition));
 			}
 		}
-		// 触发组件注册的时间
+		// 触发组件注册的事件
 		readerContext.fireComponentRegistered(compositeDef);
 	}
 

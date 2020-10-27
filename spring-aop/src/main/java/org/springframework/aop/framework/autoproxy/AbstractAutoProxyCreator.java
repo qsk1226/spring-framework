@@ -289,14 +289,15 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 	}
 
 	/**
-	 * Create a proxy with the configured interceptors if the bean is
-	 * identified as one to proxy by the subclass.
+	 * 如果bean被子类标识为要代理的bean，则使用配置的拦截器创建代理。
+	 * Create a proxy with the configured interceptors if the bean is identified as one to proxy by the subclass.
 	 * @see #getAdvicesAndAdvisorsForBean
 	 */
 	@Override
 	public Object postProcessAfterInitialization(@Nullable Object bean, String beanName) {
 		if (bean != null) {
 			Object cacheKey = getCacheKey(bean.getClass(), beanName);
+			// 该缓存用于保存已经创建过 代理对象的cachekey，避免重复创建
 			if (!this.earlyProxyReferences.contains(cacheKey)) {
 				// 如果Bean符合代理条件，返回代理包装类
 				return wrapIfNecessary(bean, beanName, cacheKey);

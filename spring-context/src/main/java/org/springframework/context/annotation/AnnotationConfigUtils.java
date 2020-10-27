@@ -169,7 +169,7 @@ public abstract class AnnotationConfigUtils {
 		// 注解处理器BeanDefinition集合
 		Set<BeanDefinitionHolder> beanDefs = new LinkedHashSet<>(8);
 		/*
-		ConfigurationClassPostProcessor 用于引导@Configuration类的处理。
+		ConfigurationClassPostProcessor 用于引导 @Configuration类的处理。
 		可以像任何其他BeanFactoryPostProcessor一样手动声明。
 		这个后处理器是优先级排序的，因为在@Configuration类中声明的任何Bean方法都必须在任何其他BeanFactoryPostProcessor执行之前注册它们对应的Bean定义，这一点很重要
 		*/

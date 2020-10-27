@@ -810,6 +810,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		/**
 		 * beanFactory 实际类型是DefaultListableBeanFactory
 		 * getBeanFactoryPostProcessors() 获取已经注册的 bean 对象，返回的是 AbstractApplicationContext 属性 beanFactoryPostProcessors
+		 *
 		 */
 		PostProcessorRegistrationDelegate.invokeBeanFactoryPostProcessors(beanFactory, getBeanFactoryPostProcessors());
 

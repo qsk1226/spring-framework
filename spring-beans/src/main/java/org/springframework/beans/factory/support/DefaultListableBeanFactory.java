@@ -852,17 +852,17 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 
 		// Iterate over a copy to allow for init methods which in turn register new bean definitions.
 		// While this may not be part of the regular factory bootstrap, it does otherwise work fine.
-		/* xml解析时，讲过，把所有beanName都缓存到beanDefinitionNames了 */
+		/* xml解析时，讲过，把所有beanName都缓存到 beanDefinitionNames了 */
 		List<String> beanNames = new ArrayList<>(this.beanDefinitionNames);
 
 		// Trigger initialization of all non-lazy singleton beans...
 		for (String beanName : beanNames) {
-			//把父BeanDefinition里面的属性拿到子BeanDefinition中，例如bean标签有abstract属性和parent属性的需要合并
+			//把父 BeanDefinition 里面的属性拿到子 BeanDefinition 中，例如 bean 标签有 abstract 属性和 parent 属性的需要合并
 			RootBeanDefinition bd = getMergedLocalBeanDefinition(beanName);
 
 			//如果不是抽象的、单例的，非懒加载的  才会实例化
 			if (!bd.isAbstract() && bd.isSingleton() && !bd.isLazyInit()) {
-				//判断bean是否实现了FactoryBean接口，这里可以不看
+				//判断bean是否实现了 FactoryBean 接口，这里可以不看
 				if (isFactoryBean(beanName)) {
 					Object bean = getBean(FACTORY_BEAN_PREFIX + beanName);
 					if (bean instanceof FactoryBean) {
@@ -883,8 +883,8 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 				} else {
 					/**
 					 * 实例化过程
-					 * BeanFactory返回指定bean的一个实例，该实例可以是共享的，也可以是独立的。
-					 * 该方法允许使用Spring BeanFactory 作为单例或原型设计模式的替代。
+					 * BeanFactory 返回指定bean的一个实例，该实例可以是共享的，也可以是独立的。
+					 * 该方法允许使用 Spring BeanFactory 作为单例或原型设计模式的替代。
 					 * 在单例bean的情况下，调用者可以保留对返回对象的引用。
 					 */
 					getBean(beanName);
@@ -977,7 +977,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 				// Still in startup registration phase
 				this.beanDefinitionMap.put(beanName, beanDefinition);
 
-				//把beanName放到beanDefinitionNames list中，这个list着重记住，bean实例化的时候需要用到
+				//把beanName放到 beanDefinitionNames list中，这个list着重记住，bean实例化的时候需要用到
 				this.beanDefinitionNames.add(beanName);
 				this.manualSingletonNames.remove(beanName);
 			}

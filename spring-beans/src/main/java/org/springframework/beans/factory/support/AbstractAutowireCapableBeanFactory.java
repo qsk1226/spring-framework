@@ -1179,7 +1179,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			return obtainFromSupplier(instanceSupplier, beanName);
 		}
 
-		// 如果有FactoryMethodName属性，可以不读
+		// 如果有 FactoryMethodName 属性，可以不读
 		if (mbd.getFactoryMethodName() != null) {
 			return instantiateUsingFactoryMethod(beanName, mbd, args);
 		}
@@ -1394,7 +1394,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		// state of the bean before properties are set. This can be used, for example,
 		// to support styles of field injection.
 		boolean continueWithPropertyPopulation = true;
-		//  这里可以写接口让所有的类都不能依赖注入
+		//  框架自身定义的类 并且是否允许该工厂持有一个实例， 这里可以写接口让所有的类都不能依赖注入
 		if (!mbd.isSynthetic() && hasInstantiationAwareBeanPostProcessors()) {
 			for (BeanPostProcessor bp : getBeanPostProcessors()) {
 				/*
@@ -1402,7 +1402,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 				 * 以及一个实例化后但在显式属性设置或自动装配发生之前的回调。 通常用于抑制特定目标bean的默认实例化，
 				 * 例如创建具有特殊目标源(池化目标、延迟初始化目标等)的代理，或者实现额外的注入策略，如字段注入。
 				 * 注意:此接口是一个特殊用途的接口，主要供框架内部使用。建议尽可能实现简单的BeanPostProcessor接口，
-				 * 或者从InstantiationAwareBeanPostProcessorAdapter派生，以避免扩展到这个接口。
+				 * 或者从 InstantiationAwareBeanPostProcessorAdapter 派生，以避免扩展到这个接口。
 				 */
 				if (bp instanceof InstantiationAwareBeanPostProcessor) {
 					InstantiationAwareBeanPostProcessor ibp = (InstantiationAwareBeanPostProcessor) bp;

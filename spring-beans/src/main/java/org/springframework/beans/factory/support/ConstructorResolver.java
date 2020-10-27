@@ -161,7 +161,7 @@ class ConstructorResolver {
 				}
 			}
 
-			//mbd.hasConstructorArgumentValues()这个是false的，因为是@Autowired的构造函数，不是<constructor-arg>标签
+			//mbd.hasConstructorArgumentValues()这个是false的，因为是 @Autowired 的构造函数，不是<constructor-arg>标签
 			if (candidates.length == 1 && explicitArgs == null && !mbd.hasConstructorArgumentValues()) {
 				Constructor<?> uniqueCandidate = candidates[0];
 				//如果是无参构造函数

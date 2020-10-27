@@ -216,6 +216,7 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 	 */
 	@Override
 	public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) {
+		// 生成唯一 id 防止重复
 		int registryId = System.identityHashCode(registry);
 		if (this.registriesPostProcessed.contains(registryId)) {
 			throw new IllegalStateException(
@@ -226,7 +227,7 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 					"postProcessBeanFactory already called on this post-processor against " + registry);
 		}
 		this.registriesPostProcessed.add(registryId);
-
+		// 对于一些配置类进行处理 @ComponentScanner、@Import、@ImportSource、@PropertySource
 		processConfigBeanDefinitions(registry);
 	}
 
@@ -258,8 +259,9 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 	 */
 	public void processConfigBeanDefinitions(BeanDefinitionRegistry registry) {
 		List<BeanDefinitionHolder> configCandidates = new ArrayList<>();
+		// 获取当前所有 bean 的注册信息
 		String[] candidateNames = registry.getBeanDefinitionNames();
-
+		// 找到带有 @Configuration 注解的 bean
 		for (String beanName : candidateNames) {
 			BeanDefinition beanDef = registry.getBeanDefinition(beanName);
 			if (ConfigurationClassUtils.isFullConfigurationClass(beanDef) ||
@@ -312,6 +314,7 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 		Set<BeanDefinitionHolder> candidates = new LinkedHashSet<>(configCandidates);
 		Set<ConfigurationClass> alreadyParsed = new HashSet<>(configCandidates.size());
 		do {
+			// 对 bean 信息进行解析
 			parser.parse(candidates);
 			parser.validate();
 
@@ -324,7 +327,7 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 						registry, this.sourceExtractor, this.resourceLoader, this.environment,
 						this.importBeanNameGenerator, parser.getImportRegistry());
 			}
-			/** 设置BeanDefinition的属性值，重点看，具体执行 @Import、@ImportSource、@Bean的逻辑*/
+			/** 加载bean  设置 BeanDefinition 的属性值，重点看，具体执行 @Import、@ImportSource、@Bean的逻辑*/
 			this.reader.loadBeanDefinitions(configClasses);
 			alreadyParsed.addAll(configClasses);
 
@@ -427,8 +430,7 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 
 		@Override
 		public PropertyValues postProcessProperties(@Nullable PropertyValues pvs, Object bean, String beanName) {
-			// Inject the BeanFactory before AutowiredAnnotationBeanPostProcessor's
-			// postProcessProperties method attempts to autowire other configuration beans.
+			// Inject the BeanFactory before AutowiredAnnotationBeanPostProcessor's postProcessProperties method attempts to autowire other configuration beans.
 			if (bean instanceof EnhancedConfiguration) {
 				((EnhancedConfiguration) bean).setBeanFactory(this.beanFactory);
 			}

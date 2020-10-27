@@ -87,7 +87,7 @@ public abstract class AbstractXmlApplicationContext extends org.springframework.
 		// resource loading environment.
 		beanDefinitionReader.setEnvironment(this.getEnvironment());
 
-		//这里传一个this进去，因为ApplicationContext是实现了ResourceLoader接口的
+		//这里传一个this进去，因为 ApplicationContext 是实现了ResourceLoader接口的
 		beanDefinitionReader.setResourceLoader(this);
 		beanDefinitionReader.setEntityResolver(new ResourceEntityResolver(this));
 

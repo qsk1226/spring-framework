@@ -417,8 +417,7 @@ public class ClassPathScanningCandidateComponentProvider implements EnvironmentC
 	private Set<BeanDefinition> scanCandidateComponents(String basePackage) {
 		Set<BeanDefinition> candidates = new LinkedHashSet<>();
 		try {
-			String packageSearchPath = ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX +
-					resolveBasePackage(basePackage) + '/' + this.resourcePattern;
+			String packageSearchPath = ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX + resolveBasePackage(basePackage) + '/' + this.resourcePattern;
 
 			//这里递归寻找文件
 			Resource[] resources = getResourcePatternResolver().getResources(packageSearchPath);
@@ -513,8 +512,7 @@ public class ClassPathScanningCandidateComponentProvider implements EnvironmentC
 	 */
 	private boolean isConditionMatch(MetadataReader metadataReader) {
 		if (this.conditionEvaluator == null) {
-			this.conditionEvaluator =
-					new ConditionEvaluator(getRegistry(), this.environment, this.resourcePatternResolver);
+			this.conditionEvaluator = new ConditionEvaluator(getRegistry(), this.environment, this.resourcePatternResolver);
 		}
 		return !this.conditionEvaluator.shouldSkip(metadataReader.getAnnotationMetadata());
 	}

@@ -280,7 +280,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	@SuppressWarnings("unchecked")
 	protected <T> T doGetBean(final String name, @Nullable final Class<T> requiredType,
 	                          @Nullable final Object[] args, boolean typeCheckOnly) throws BeansException {
-		// beanName: 1、 非工厂beanName时直接返回； 2、工厂beanName 剥离 & 返回
+		// beanName: 1、 非工厂 beanName 时直接返回； 2、工厂 beanName 剥离 & 返回
 		final String beanName = transformedBeanName(name);
 		Object bean;
 
@@ -305,11 +305,10 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 					logger.trace("Returning cached instance of singleton bean '" + beanName + "'");
 				}
 			}
-			//改方法是FactoryBean接口的调用入口
+			//该方法是 FactoryBean 接口的调用入口
 			bean = getObjectForBeanInstance(sharedInstance, name, beanName, null);
 		} else {
-
-			//如果singletonObjects缓存里面没有，则走下来
+			//如果singletonObjects 缓存里面没有，则走下来
 			//如果是scope 是Prototype的，校验是否有出现循环依赖，如果有则直接报错
 			if (isPrototypeCurrentlyInCreation(beanName)) {
 				throw new BeanCurrentlyInCreationException(beanName);

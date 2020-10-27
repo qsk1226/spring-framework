@@ -197,7 +197,10 @@ public abstract class AbstractAspectJAdvisorFactory implements AspectJAdvisorFac
 			this.annotation = annotation;
 			this.annotationType = determineAnnotationType(annotation);
 			try {
+				// 解析注解上面的表达式 如 @Around("pcl()")
+				// @afterReturning(pointtcut = "execution(public * com.goddess.service.*.*(..))")
 				this.pointcutExpression = resolveExpression(annotation);
+				// 获取注解上的参数
 				Object argNames = AnnotationUtils.getValue(annotation, "argNames");
 				this.argumentNames = (argNames instanceof String ? (String) argNames : "");
 			}

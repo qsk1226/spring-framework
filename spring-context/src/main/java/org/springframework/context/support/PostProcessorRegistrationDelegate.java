@@ -60,7 +60,7 @@ final class PostProcessorRegistrationDelegate {
 			ConfigurableListableBeanFactory beanFactory, List<BeanFactoryPostProcessor> beanFactoryPostProcessors) {
 
 		// Invoke BeanDefinitionRegistryPostProcessors first, if any.
-		// 如果有的话，先调用beandefinitionregistrypostprocessor。
+		// 如果有的话，先调用 BeandefinitionRegistryPostProcessor。
 		Set<String> processedBeans = new HashSet<>();
 
 		if (beanFactory instanceof BeanDefinitionRegistry) {
@@ -73,8 +73,7 @@ final class PostProcessorRegistrationDelegate {
 			for (BeanFactoryPostProcessor postProcessor : beanFactoryPostProcessors) {
 				// BeanDefinitionRegistryPostProcessor
 				if (postProcessor instanceof BeanDefinitionRegistryPostProcessor) {
-					BeanDefinitionRegistryPostProcessor registryProcessor =
-							(BeanDefinitionRegistryPostProcessor) postProcessor;
+					BeanDefinitionRegistryPostProcessor registryProcessor = (BeanDefinitionRegistryPostProcessor) postProcessor;
 					// 修改 BeanDefinition 注册表，并将修改过之后的后置处理器添加到 registryProcessors 列表中
 					registryProcessor.postProcessBeanDefinitionRegistry(registry);
 					registryProcessors.add(registryProcessor);
@@ -85,7 +84,7 @@ final class PostProcessorRegistrationDelegate {
 
 			// Do not initialize FactoryBeans here: We need to leave all regular beans uninitialized to let the bean factory post-processors apply to them!
 			// Separate between BeanDefinitionRegistryPostProcessors that implement PriorityOrdered, Ordered, and the rest.
-			// 不要在这里初始化factorybean:我们需要保持所有常规bean未初始化，以便让bean工厂后处理器应用于它们!
+			// 不要在这里初始化factorybean : 我们需要保持所有常规bean未初始化，以便让bean工厂后处理器应用于它们!
 			// 独立于beandefinitionregistrypostprocessor，实现priorityor, Ordered，和其他。
 			List<BeanDefinitionRegistryPostProcessor> currentRegistryProcessors = new ArrayList<>();
 
@@ -115,6 +114,7 @@ final class PostProcessorRegistrationDelegate {
 
 				//判断是否是实现的Ordered接口
 				if (!processedBeans.contains(ppName) && beanFactory.isTypeMatch(ppName, Ordered.class)) {
+					// 这里进行实例化操作
 					currentRegistryProcessors.add(beanFactory.getBean(ppName, BeanDefinitionRegistryPostProcessor.class));
 					processedBeans.add(ppName);
 				}
