@@ -158,7 +158,7 @@ final class JdkDynamicAopProxy implements AopProxy, InvocationHandler, Serializa
 		MethodInvocation invocation;
 		Object oldProxy = null;
 		boolean setProxyContext = false;
-		// 从代理工厂中拿到 TargetSource 对象，改对象包装了被代理实例 bean
+		// 从代理工厂中拿到 TargetSource 对象，该对象包装了被代理实例 bean
 		TargetSource targetSource = this.advised.targetSource;
 		Object target = null;
 

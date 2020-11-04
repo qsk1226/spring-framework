@@ -346,7 +346,7 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 			return bean;
 		}
 
-		// 创建当前bean的代理，如果这个bean有advice的话
+		// 创建当前bean的代理，如果这个bean有Advisor的话
 		Object[] specificInterceptors = getAdvicesAndAdvisorsForBean(bean.getClass(), beanName, null);
 		// 如果有切面，则生成该bean的代理
 		if (specificInterceptors != DO_NOT_PROXY) {
@@ -516,7 +516,7 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 	 */
 	protected Advisor[] buildAdvisors(@Nullable String beanName, @Nullable Object[] specificInterceptors) {
 		// Handle prototypes correctly...
-		// 自定义MethodInterceptor   拿到 AnnotationAwareAspectJAutoProxyCreator 对象 调用 setInterceptorNames 方法
+		// 自定义 MethodInterceptor   拿到 AnnotationAwareAspectJAutoProxyCreator 对象 调用 setInterceptorNames 方法
 		Advisor[] commonInterceptors = resolveInterceptorNames();
 
 		List<Object> allInterceptors = new ArrayList<>();
@@ -542,7 +542,7 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 
 		Advisor[] advisors = new Advisor[allInterceptors.size()];
 		for (int i = 0; i < allInterceptors.size(); i++) {
-			// 对自定义的advice进行包装，把advice包装成advisor对象，切面对象
+			// 对自定义的 advice 进行包装，把advice包装成advisor对象，切面对象
 			advisors[i] = this.advisorAdapterRegistry.wrap(allInterceptors.get(i));
 		}
 		return advisors;
