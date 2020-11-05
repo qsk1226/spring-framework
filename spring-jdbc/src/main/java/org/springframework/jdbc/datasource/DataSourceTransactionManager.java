@@ -329,7 +329,7 @@ public class DataSourceTransactionManager extends AbstractPlatformTransactionMan
 	protected Object doSuspend(Object transaction) {
 		DataSourceTransactionObject txObject = (DataSourceTransactionObject) transaction;
 		txObject.setConnectionHolder(null);
-		// 接触绑定关系
+		// 解除绑定关系
 		return TransactionSynchronizationManager.unbindResource(obtainDataSource());
 	}
 
