@@ -299,11 +299,11 @@ public class DataSourceTransactionManager extends AbstractPlatformTransactionMan
 				con.setAutoCommit(false);
 			}
 
-			// 设置只读事务，从这儿设置的时间点开始(时间点a) 到这个事务结束的过程中，其它事务所提交的数据，钙食物将看不见
-			// 设置制度事务就是告诉数据库，我这个事务内没有新增、修改、删除操作，只有查询操作，不需要哦数据库锁等操作，减少数据库压力
+			// 设置只读事务，从这儿设置的时间点开始(时间点a) 到这个事务结束的过程中，其它事务所提交的数据，该事务将看不见
+			// 设置只读事务就是告诉数据库，我这个事务内没有新增、修改、删除操作，只有查询操作，不需要数据库锁等操作，减少数据库压力
 			prepareTransactionalConnection(con, definition);
 
-			// 自己提交关闭了，就说明已经开启事务了，事务时活动的
+			// 自己提交关闭了，就说明已经开启事务了，事务是活动的
 			txObject.getConnectionHolder().setTransactionActive(true);
 
 			int timeout = determineTimeout(definition);

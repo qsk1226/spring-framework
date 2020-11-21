@@ -79,7 +79,7 @@ public class DefaultAdvisorChainFactory implements AdvisorChainFactory, Serializ
 						match = mm.matches(method, actualClass);
 					}
 					if (match) {
-						/** 对切面通知进行统一包装 获取所有的 MethodIntercetor */
+						/** 对切面通知进行统一包装 获取所有的 MethodInterceptor */
 						MethodInterceptor[] interceptors = registry.getInterceptors(advisor);
 						if (mm.isRuntime()) {
 							// Creating a new object instance in the getInterceptors() method
