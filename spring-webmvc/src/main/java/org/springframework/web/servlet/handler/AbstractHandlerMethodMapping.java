@@ -264,14 +264,17 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
 
 		if (handlerType != null) {
 			Class<?> userType = ClassUtils.getUserClass(handlerType);
+			// 获取方法对象和方法上面的 @RequestMapping 注解属性封装对象的映射关系
 			Map<Method, T> methods = MethodIntrospector.selectMethods(userType,
-					(MethodIntrospector.MetadataLookup<T>) method -> {
-						try {
-							return getMappingForMethod(method, userType);
-						}
-						catch (Throwable ex) {
-							throw new IllegalStateException("Invalid mapping on handler class [" +
-									userType.getName() + "]: " + method, ex);
+					new MethodIntrospector.MetadataLookup<T>() {
+						@Override
+						public T inspect(Method method) {
+							try {
+								return AbstractHandlerMethodMapping.this.getMappingForMethod(method, userType);
+							} catch (Throwable ex) {
+								throw new IllegalStateException("Invalid mapping on handler class [" +
+										userType.getName() + "]: " + method, ex);
+							}
 						}
 					});
 			if (logger.isTraceEnabled()) {
@@ -279,6 +282,7 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
 			}
 			methods.forEach((method, mapping) -> {
 				Method invocableMethod = AopUtils.selectInvocableMethod(method, userType);
+				// 建立 uri 和 方法的各种映射关系，反正一条，根据 uri 要能找到 metthod 对象
 				registerHandlerMethod(handler, invocableMethod, mapping);
 			});
 		}

@@ -354,7 +354,7 @@ public abstract class AbstractPlatformTransactionManager implements PlatformTran
 	@Override
 	public final TransactionStatus getTransaction(@Nullable TransactionDefinition definition) throws TransactionException {
 
-		/*重点， 通常是DataSourceTransactionManager实现类DataSourceTransactionObject 拿到对象*/
+		/*重点， 通常是DataSourceTransactionManager 实现类 DataSourceTransactionObject 拿到对象*/
 		Object transaction = doGetTransaction();
 
 		// Cache debug flag to avoid repeated checks.
@@ -432,7 +432,7 @@ public abstract class AbstractPlatformTransactionManager implements PlatformTran
 			// 挂起当前事务
 			Object suspendedResources = suspend(transaction);
 			boolean newSynchronization = getTransactionSynchronization() == SYNCHRONIZATION_ALWAYS;
-			// 修改事务状态信息，吧事务的一些信息存储到当前线程 ThreadLocal 中，
+			// 修改事务状态信息，把事务的一些信息存储到当前线程 ThreadLocal 中，
 			return prepareTransactionStatus(definition, null, false, newSynchronization, debugEnabled, suspendedResources);
 		}
 		// 起新事务
@@ -765,6 +765,7 @@ public abstract class AbstractPlatformTransactionManager implements PlatformTran
 					}
 					unexpectedRollback = status.isGlobalRollbackOnly();
 					status.releaseHeldSavepoint();
+
 				} else if (status.isNewTransaction()) {
 					if (status.isDebug()) {
 						logger.debug("Initiating transaction commit");
