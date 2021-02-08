@@ -302,7 +302,7 @@ public class CommonAnnotationBeanPostProcessor extends InitDestroyAnnotationBean
 
 		//扫描@PostConstruct @PreDestroy
 		super.postProcessMergedBeanDefinition(beanDefinition, beanType, beanName);
-		//扫描@Resource,扫描属性和方法上是否有 @Resource 注解，如果有则收集起来封装对象
+		//扫描 @Resource ,扫描属性和方法上是否有 @Resource 注解，如果有则收集起来封装对象
 		InjectionMetadata metadata = findResourceMetadata(beanName, beanType, null);
 		metadata.checkConfigMembers(beanDefinition);
 	}

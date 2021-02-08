@@ -141,6 +141,9 @@ public abstract class AnnotationConfigUtils {
 	}
 
 	/**
+	 * 在给定的 registry 中 注册注解处理器 BeanPostProcessor 和 BeanFacotryPostProcessor
+	 * 如下： ConfigurationClassPostProcessor、AutowiredAnnotationBeanPostProcessor、CommonAnnotationBeanPostProcessor、
+	 * EventListenerMethodProcessor、DefaultEventListenerFactory
 	 * Register all relevant annotation post processors in the given registry.
 	 *
 	 * @see ComponentScanBeanDefinitionParser#registerComponents
@@ -152,7 +155,6 @@ public abstract class AnnotationConfigUtils {
 	 * @return a Set of BeanDefinitionHolders, containing all bean definitions
 	 * that have actually been registered by this call
 	 */
-	/*在给定的注册表中注册所有相关的注释后处理器*/
 	public static Set<BeanDefinitionHolder> registerAnnotationConfigProcessors(
 			BeanDefinitionRegistry registry, @Nullable Object source) {
 
@@ -169,7 +171,7 @@ public abstract class AnnotationConfigUtils {
 		// 注解处理器BeanDefinition集合
 		Set<BeanDefinitionHolder> beanDefs = new LinkedHashSet<>(8);
 		/*
-		ConfigurationClassPostProcessor 用于引导 @Configuration类的处理。
+		ConfigurationClassPostProcessor 用于引导 @Configuration、@Bean、@Component、@ComponentScan 类的处理。
 		可以像任何其他BeanFactoryPostProcessor一样手动声明。
 		这个后处理器是优先级排序的，因为在@Configuration类中声明的任何Bean方法都必须在任何其他BeanFactoryPostProcessor执行之前注册它们对应的Bean定义，这一点很重要
 		*/
@@ -178,7 +180,9 @@ public abstract class AnnotationConfigUtils {
 			def.setSource(source);
 			beanDefs.add(registerPostProcessor(registry, def, CONFIGURATION_ANNOTATION_PROCESSOR_BEAN_NAME));
 		}
-
+		/*处理 @Autowire 注解
+		 *
+		 */
 		if (!registry.containsBeanDefinition(AUTOWIRED_ANNOTATION_PROCESSOR_BEAN_NAME)) {
 			RootBeanDefinition def = new RootBeanDefinition(AutowiredAnnotationBeanPostProcessor.class);
 			def.setSource(source);
@@ -186,7 +190,7 @@ public abstract class AnnotationConfigUtils {
 		}
 
 		// Check for JSR-250 support, and if present add the CommonAnnotationBeanPostProcessor.
-		/*处理 @PostConstruct @PreDestroy @Resource注解*/
+		/*处理 @PostConstruct @PreDestroy @Resource 注解*/
 		if (jsr250Present && !registry.containsBeanDefinition(COMMON_ANNOTATION_PROCESSOR_BEAN_NAME)) {
 			RootBeanDefinition def = new RootBeanDefinition(CommonAnnotationBeanPostProcessor.class);
 			def.setSource(source);

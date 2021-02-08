@@ -808,7 +808,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	protected void invokeBeanFactoryPostProcessors(ConfigurableListableBeanFactory beanFactory) {
 
 		/**
-		 * beanFactory 实际类型是DefaultListableBeanFactory
+		 * beanFactory 实际类型是 DefaultListableBeanFactory
 		 * getBeanFactoryPostProcessors() 获取已经注册的 bean 对象，返回的是 AbstractApplicationContext 属性 beanFactoryPostProcessors
 		 *
 		 */
