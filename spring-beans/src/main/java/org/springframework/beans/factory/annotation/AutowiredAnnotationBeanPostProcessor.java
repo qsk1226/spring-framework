@@ -246,7 +246,7 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 		if (!this.lookupMethodsChecked.contains(beanName)) {
 			try {
 				ReflectionUtils.doWithMethods(beanClass, method -> {
-					//对注解Lookup的支持
+					//对注解 @Lookup 的支持
 					Lookup lookup = method.getAnnotation(Lookup.class);
 					if (lookup != null) {
 						Assert.state(this.beanFactory != null, "No BeanFactory available");
@@ -297,6 +297,7 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 						else if (primaryConstructor != null) {
 							continue;
 						}
+
 						//获取到构造函数上的@Autowired注解信息,这个方法可以不看
 						AnnotationAttributes ann = findAutowiredAnnotation(candidate);
 						if (ann == null) {
@@ -313,6 +314,7 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 								}
 							}
 						}
+
 						if (ann != null) {
 							if (requiredConstructor != null) {
 								throw new BeanCreationException(beanName,
@@ -320,7 +322,7 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 										". Found constructor with 'required' Autowired annotation already: " +
 										requiredConstructor);
 							}
-							//获取到@Autowired里面的required方法的值
+							//获取到 @Autowired 里面的required方法的值
 							boolean required = determineRequiredStatus(ann);
 							if (required) {
 								if (!candidates.isEmpty()) {
@@ -337,6 +339,7 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 							defaultConstructor = candidate;
 						}
 					}
+
 					if (!candidates.isEmpty()) {
 						// Add default constructor to list of optional constructors, as fallback.
 						if (requiredConstructor == null) {

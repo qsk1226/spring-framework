@@ -557,10 +557,12 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 	 * @see #setContextConfigLocation
 	 */
 	protected WebApplicationContext initWebApplicationContext() {
+		// 获取RootContext
 		WebApplicationContext rootContext =
 				WebApplicationContextUtils.getWebApplicationContext(getServletContext());
-		WebApplicationContext wac = null;
 
+		WebApplicationContext wac = null;
+		//如果已经通过构造方法设置了 webApplicationContext 的话
 		if (this.webApplicationContext != null) {
 			// A context instance was injected at construction time -> use it
 			wac = this.webApplicationContext;
@@ -578,29 +580,26 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 				}
 			}
 		}
+
 		if (wac == null) {
-			// No context instance was injected at construction time -> see if one
-			// has been registered in the servlet context. If one exists, it is assumed
-			// that the parent context (if any) has already been set and that the
-			// user has performed any initialization such as setting the context id
+			// 当webApplicationContext 已经存在ServletContext中时，通过配置在 Servlet 中的contextAttribute 参数获取
 			wac = findWebApplicationContext();
 		}
+
 		if (wac == null) {
-			// No context instance is defined for this servlet -> create a local one
+			// 如果 webApplicationContext 还没有创建，则创建一个
 			wac = createWebApplicationContext(rootContext);
 		}
 
 		if (!this.refreshEventReceived) {
-			// Either the context is not a ConfigurableApplicationContext with refresh
-			// support or the context injected at construction time had already been
-			// refreshed -> trigger initial onRefresh manually here.
+			// 当 ContextRefreshedEvent 时间没有触发时调用此方法，
 			synchronized (this.onRefreshMonitor) {
 				onRefresh(wac);
 			}
 		}
 
 		if (this.publishContext) {
-			// Publish the context as a servlet context attribute.
+			// 将 ApplicationContext 保存到 ServletContext 中
 			String attrName = getServletContextAttributeName();
 			getServletContext().setAttribute(attrName, wac);
 		}
