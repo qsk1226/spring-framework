@@ -490,7 +490,7 @@ public abstract class AbstractHandlerMapping extends WebApplicationObjectSupport
 	 * @see #getAdaptedInterceptors()
 	 */
 	protected HandlerExecutionChain getHandlerExecutionChain(Object handler, HttpServletRequest request) {
-		// 把 HandlerMethod 对象包装到 HandlerExecutionChain 对象中，这个对象中有过滤器对象
+		// 把 Handler 对象包装到 HandlerExecutionChain 对象中，这个对象中有过滤器对象
 		HandlerExecutionChain chain = (handler instanceof HandlerExecutionChain ? (HandlerExecutionChain) handler : new HandlerExecutionChain(handler));
 		// 获取 uri
 		String lookupPath = this.urlPathHelper.getLookupPathForRequest(request);

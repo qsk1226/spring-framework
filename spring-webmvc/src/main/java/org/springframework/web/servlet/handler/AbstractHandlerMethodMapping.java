@@ -29,6 +29,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import javax.servlet.ServletException;
@@ -249,6 +250,7 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
 			}
 		}
 		if (beanType != null && isHandler(beanType)) {
+			// 负责将 Handler 保存到 Map 里面
 			detectHandlerMethods(beanName);
 		}
 	}
@@ -259,12 +261,13 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
 	 * @see #getMappingForMethod
 	 */
 	protected void detectHandlerMethods(Object handler) {
-		Class<?> handlerType = (handler instanceof String ?
-				obtainApplicationContext().getType((String) handler) : handler.getClass());
+		// 获取 HandlerType 的类型
+		Class<?> handlerType = (handler instanceof String ? obtainApplicationContext().getType((String) handler) : handler.getClass());
 
 		if (handlerType != null) {
+			// 如果是 cglib 代理的子对象类型，则返回父类型，否则直接返回传入的类型
 			Class<?> userType = ClassUtils.getUserClass(handlerType);
-			// 获取方法对象和方法上面的 @RequestMapping 注解属性封装对象的映射关系
+			// 获取当前 bean 里面所有符合 Handler 要求的 Method
 			Map<Method, T> methods = MethodIntrospector.selectMethods(userType,
 					new MethodIntrospector.MetadataLookup<T>() {
 						@Override
@@ -280,10 +283,13 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
 			if (logger.isTraceEnabled()) {
 				logger.trace(formatMappings(userType, methods));
 			}
-			methods.forEach((method, mapping) -> {
-				Method invocableMethod = AopUtils.selectInvocableMethod(method, userType);
-				// 建立 uri 和 方法的各种映射关系，反正一条，根据 uri 要能找到 metthod 对象
-				registerHandlerMethod(handler, invocableMethod, mapping);
+			methods.forEach(new BiConsumer<Method, T>() {
+				@Override
+				public void accept(Method method, T mapping) {
+					Method invocableMethod = AopUtils.selectInvocableMethod(method, userType);
+					// 建立 uri 和 方法的各种映射关系，反正一条，根据 uri 要能找到 metthod 对象
+					AbstractHandlerMethodMapping.this.registerHandlerMethod(handler, invocableMethod, mapping);
+				}
 			});
 		}
 	}
