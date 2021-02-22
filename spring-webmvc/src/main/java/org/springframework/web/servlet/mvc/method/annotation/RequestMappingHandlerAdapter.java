@@ -653,13 +653,17 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 		List<HandlerMethodArgumentResolver> resolvers = new ArrayList<>();
 
 		// Annotation-based argument resolution
+		// @ReqeustParam 注解的解析器
 		resolvers.add(new RequestParamMethodArgumentResolver(getBeanFactory(), false));
 		resolvers.add(new RequestParamMapMethodArgumentResolver());
+		// @PathVariable 注解的解析器
 		resolvers.add(new PathVariableMethodArgumentResolver());
 		resolvers.add(new PathVariableMapMethodArgumentResolver());
+		//
 		resolvers.add(new MatrixVariableMethodArgumentResolver());
 		resolvers.add(new MatrixVariableMapMethodArgumentResolver());
 		resolvers.add(new ServletModelAttributeMethodProcessor(false));
+		//
 		resolvers.add(new RequestResponseBodyMethodProcessor(getMessageConverters(), this.requestResponseBodyAdvice));
 		resolvers.add(new RequestPartMethodArgumentResolver(getMessageConverters(), this.requestResponseBodyAdvice));
 		resolvers.add(new RequestHeaderMethodArgumentResolver(getBeanFactory()));
@@ -670,6 +674,7 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 		resolvers.add(new RequestAttributeMethodArgumentResolver());
 
 		// Type-based argument resolution
+		// 按照类型解析参数的解析器
 		resolvers.add(new ServletRequestMethodArgumentResolver());
 		resolvers.add(new ServletResponseMethodArgumentResolver());
 		resolvers.add(new HttpEntityMethodProcessor(getMessageConverters(), this.requestResponseBodyAdvice));
@@ -681,11 +686,12 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 		resolvers.add(new UriComponentsBuilderMethodArgumentResolver());
 
 		// Custom arguments
+		// 自定义解析器
 		if (getCustomArgumentResolvers() != null) {
 			resolvers.addAll(getCustomArgumentResolvers());
 		}
 
-		// Catch-all
+		// 可以解析所有类型的参数
 		resolvers.add(new RequestParamMethodArgumentResolver(getBeanFactory(), true));
 		resolvers.add(new ServletModelAttributeMethodProcessor(true));
 
@@ -860,12 +866,15 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 
 		ServletWebRequest webRequest = new ServletWebRequest(request, response);
 		try {
-			// 获取数据绑定工厂，@InitBinder注解支持，用处不是特别大
+			// 获取数据绑定工厂，@InitBinder 注解支持，用处不是特别大
 			WebDataBinderFactory binderFactory = getDataBinderFactory(handlerMethod);
+
 			// Model工厂，搜集 @ModelAttribute 注解的方法
 			ModelFactory modelFactory = getModelFactory(handlerMethod, binderFactory);
-			// 可调用的方法对象
+
+			// 可调用的方法对象，此类型继承自 HandlerMethod，参数绑定、处理请求、以及返回值处理都在它里面完成
 			ServletInvocableHandlerMethod invocableMethod = createInvocableHandlerMethod(handlerMethod);
+
 			if (this.argumentResolvers != null) {
 				//  设置参数解析器
 				invocableMethod.setHandlerMethodArgumentResolvers(this.argumentResolvers);
@@ -877,16 +886,20 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 			}
 			// 设置参数绑定工厂
 			invocableMethod.setDataBinderFactory(binderFactory);
+
 			// 设置参数名解析器
 			invocableMethod.setParameterNameDiscoverer(this.parameterNameDiscoverer);
 
 			ModelAndViewContainer mavContainer = new ModelAndViewContainer();
+
 			mavContainer.addAllAttributes(RequestContextUtils.getInputFlashMap(request));
+
 			// 调用有@ModelAttribute 注解的方法，每次请求都会调用 @ModelAttribute 注解的方法
-			// 把@MOdelAttribute 注解的方法返回值存储到 ModelAndViewContainer 对象的 map 中
+			// 把 @ModelAttribute 注解的方法返回值存储到 ModelAndViewContainer 对象的 map 中
 			modelFactory.initModel(webRequest, mavContainer, invocableMethod);
 			mavContainer.setIgnoreDefaultModelOnRedirect(this.ignoreDefaultModelOnRedirect);
 
+			// 创建 异步请求
 			AsyncWebRequest asyncWebRequest = WebAsyncUtils.createAsyncWebRequest(request, response);
 			asyncWebRequest.setTimeout(this.asyncRequestTimeout);
 
@@ -908,7 +921,7 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 				invocableMethod = invocableMethod.wrapConcurrentResult(result);
 			}
 
-			// Controller方法调用
+			// Controller 方法调用
 			invocableMethod.invokeAndHandle(webRequest, mavContainer);
 			if (asyncManager.isConcurrentHandlingStarted()) {
 				return null;
