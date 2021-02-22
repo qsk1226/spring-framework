@@ -562,7 +562,7 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 
 	@Override
 	public void afterPropertiesSet() {
-		// Do this first, it may add ResponseBody advice beans
+		// 初始化待 @ControllerAdvice、@RestControllerAdvice 注解的类的相关属性
 		initControllerAdviceCache();
 
 		if (this.argumentResolvers == null) {
@@ -583,7 +583,7 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 		if (getApplicationContext() == null) {
 			return;
 		}
-		// 找到所有使用了注解 @ControllerAdvice 的Bean组件
+		// 从容器中找到所有使用了注解 @ControllerAdvice、@RestControllerAdvice 的 Bean 组件
 		List<ControllerAdviceBean> adviceBeans = ControllerAdviceBean.findAnnotatedBeans(getApplicationContext());
 		// 对组件进行排序
 		AnnotationAwareOrderComparator.sort(adviceBeans);
@@ -595,26 +595,29 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 			if (beanType == null) {
 				throw new IllegalStateException("Unresolvable type for ControllerAdviceBean: " + adviceBean);
 			}
-			// 获取当前 ControllerAdvicebean 中所有使用了@ModelAttribute 注解的方法
+
+			// 获取当前 ControllerAdvicebean 中所有使用了 @ModelAttribute 没 @RequestMapping 注解的方法
 			Set<Method> attrMethods = MethodIntrospector.selectMethods(beanType, MODEL_ATTRIBUTE_METHODS);
 			if (!attrMethods.isEmpty()) {
 				this.modelAttributeAdviceCache.put(adviceBean, attrMethods);
 			}
-			// 获取当前 ControllerAdvicebean 中所有使用了@InitMethod 注解的方法
+			// 获取当前 ControllerAdvicebean 中所有使用了 @InitMethod 注解的方法
 			Set<Method> binderMethods = MethodIntrospector.selectMethods(beanType, INIT_BINDER_METHODS);
 			if (!binderMethods.isEmpty()) {
 				this.initBinderAdviceCache.put(adviceBean, binderMethods);
 			}
-			// 如果当前 ControllerAdviceBean 继承自 RequestBodyAdvice，将其登记到RequestResponseBodyAdviceBeans
+			// 查找实现了 RequestBodyAdvice 接口的类
+			// 如果当前 ControllerAdviceBean 继承自 RequestBodyAdvice，将其登记到 RequestResponseBodyAdviceBeans
 			if (RequestBodyAdvice.class.isAssignableFrom(beanType)) {
 				requestResponseBodyAdviceBeans.add(adviceBean);
 			}
+			// 查找 实现了 ResponseBodyAdvice 接口的类
 			// 如果当前 ControllerAdviceBean 继承自 ResponseBodyAdvice，将其登记到RequestResponseBodyAdviceBeans
 			if (ResponseBodyAdvice.class.isAssignableFrom(beanType)) {
 				requestResponseBodyAdviceBeans.add(adviceBean);
 			}
 		}
-
+		// 将找到的 实现了 ResponseBodyAdvice 接口的类从前面添加到 requestResponseBodyAdvice 容器属性中，并放到容器的最前面
 		if (!requestResponseBodyAdviceBeans.isEmpty()) {
 			this.requestResponseBodyAdvice.addAll(0, requestResponseBodyAdviceBeans);
 		}
@@ -733,11 +736,9 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 		handlers.add(new ModelAndViewMethodReturnValueHandler());
 		handlers.add(new ModelMethodProcessor());
 		handlers.add(new ViewMethodReturnValueHandler());
-		handlers.add(new ResponseBodyEmitterReturnValueHandler(getMessageConverters(),
-				this.reactiveAdapterRegistry, this.taskExecutor, this.contentNegotiationManager));
+		handlers.add(new ResponseBodyEmitterReturnValueHandler(getMessageConverters(), this.reactiveAdapterRegistry, this.taskExecutor, this.contentNegotiationManager));
 		handlers.add(new StreamingResponseBodyReturnValueHandler());
-		handlers.add(new HttpEntityMethodProcessor(getMessageConverters(),
-				this.contentNegotiationManager, this.requestResponseBodyAdvice));
+		handlers.add(new HttpEntityMethodProcessor(getMessageConverters(), this.contentNegotiationManager, this.requestResponseBodyAdvice));
 		handlers.add(new HttpHeadersReturnValueHandler());
 		handlers.add(new CallableMethodReturnValueHandler());
 		handlers.add(new DeferredResultMethodReturnValueHandler());
@@ -745,8 +746,7 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 
 		// Annotation-based return value types
 		handlers.add(new ModelAttributeMethodProcessor(false));
-		handlers.add(new RequestResponseBodyMethodProcessor(getMessageConverters(),
-				this.contentNegotiationManager, this.requestResponseBodyAdvice));
+		handlers.add(new RequestResponseBodyMethodProcessor(getMessageConverters(), this.contentNegotiationManager, this.requestResponseBodyAdvice));
 
 		// Multi-purpose return value types
 		handlers.add(new ViewNameMethodReturnValueHandler());

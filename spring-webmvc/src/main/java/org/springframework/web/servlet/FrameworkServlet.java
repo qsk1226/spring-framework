@@ -582,7 +582,7 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 		}
 
 		if (wac == null) {
-			// 当webApplicationContext 已经存在ServletContext中时，通过配置在 Servlet 中的contextAttribute 参数获取
+			// 当 webApplicationContext 已经存在 ServletContext中时，通过配置在 Servlet 中的contextAttribute 参数获取
 			wac = findWebApplicationContext();
 		}
 

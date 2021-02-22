@@ -1308,6 +1308,7 @@ public class DispatcherServlet extends FrameworkServlet {
 	protected HandlerAdapter getHandlerAdapter(Object handler) throws ServletException {
 		if (this.handlerAdapters != null) {
 			for (HandlerAdapter adapter : this.handlerAdapters) {
+				//  是否支持当前 handler
 				if (adapter.supports(handler)) {
 					return adapter;
 				}

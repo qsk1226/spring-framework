@@ -609,7 +609,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 			try {
 				// Allows post-processing of the bean factory in context subclasses.
 				/**
-				 *	TODO 有什么用，用于扩展web相关支持
+				 *	TODO 有什么用，用于扩展web相关支持，AbstractRefreshableWebApplicationContext
 				 */
 				postProcessBeanFactory(beanFactory);
 
