@@ -100,6 +100,7 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
 	// 当然这个你也可以自己实现这个接口，然后set进来即可（只是一般没啥必要这么去干~~）
 	@Nullable
 	private HandlerMethodMappingNamingStrategy<T> namingStrategy;
+
 	// 内部类：负责注册~
 	private final MappingRegistry mappingRegistry = new MappingRegistry();
 

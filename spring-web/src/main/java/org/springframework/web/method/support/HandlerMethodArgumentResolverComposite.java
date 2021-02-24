@@ -126,7 +126,7 @@ public class HandlerMethodArgumentResolverComposite implements HandlerMethodArgu
 					"Unsupported parameter type [" + parameter.getParameterType().getName() + "]." +
 							" supportsParameter should be called first.");
 		}
-		//  策略模式去调用具体参数解析类
+		//  策略模式去调用具体参数解析类，此处有 MessageConverter 的选择逻辑
 		return resolver.resolveArgument(parameter, mavContainer, webRequest, binderFactory);
 	}
 
