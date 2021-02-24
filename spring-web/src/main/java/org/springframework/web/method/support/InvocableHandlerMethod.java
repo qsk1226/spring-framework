@@ -152,10 +152,12 @@ public class InvocableHandlerMethod extends HandlerMethod {
 		}
 		// 入参的包装类，里面包装了参数类型，参数名称，参数注解等信息
 		MethodParameter[] parameters = getMethodParameters();
+		// 用于保存解析出参数的值
 		Object[] args = new Object[parameters.length];
+
 		for (int i = 0; i < parameters.length; i++) {
 			MethodParameter parameter = parameters[i];
-			// 设置参数名称解析器
+			// 设置参数名称的解析器
 			parameter.initParameterNameDiscovery(this.parameterNameDiscoverer);
 			args[i] = findProvidedArgument(parameter, providedArgs);
 			if (args[i] != null) {
