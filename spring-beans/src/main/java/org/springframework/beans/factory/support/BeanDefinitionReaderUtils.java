@@ -164,7 +164,7 @@ public abstract class BeanDefinitionReaderUtils {
 		// Register bean definition under primary name.
 		String beanName = definitionHolder.getBeanName();
 
-		//完成BeanDefinition的注册，重点看，重要程度 5
+		//完成 BeanDefinition 的注册，重点看，重要程度 5
 		registry.registerBeanDefinition(beanName, definitionHolder.getBeanDefinition());
 
 		//建立别名和 id的映射，这样就可以根据别名获取到id

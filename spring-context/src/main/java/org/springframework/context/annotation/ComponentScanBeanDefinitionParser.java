@@ -93,7 +93,7 @@ public class ComponentScanBeanDefinitionParser implements BeanDefinitionParser {
 		//扫描并把扫描的类封装成beanDefinition对象，加入到BeanDefinitionHolder列表中  核心方法，重要程度 5
 		Set<BeanDefinitionHolder> beanDefinitions = scanner.doScan(basePackages);
 
-		// 注册组件，比如@Autowire、@Value的实现类--BeanPostProcessor类的实现
+		// 注册组件，比如 @Autowire、@Value的实现类--BeanPostProcessor类的实现
 		registerComponents(parserContext.getReaderContext(), beanDefinitions, element);
 
 		return null;
@@ -159,7 +159,7 @@ public class ComponentScanBeanDefinitionParser implements BeanDefinitionParser {
 		}
 		if (annotationConfig) {
 
-			// 这里稍微看一下，注册了几个比较重要的BeanPostProcessor类、BeanFactoryPostProcessor类
+			// 这里稍微看一下，注册了几个比较重要的 BeanPostProcessor 类、BeanFactoryPostProcessor类
 			// AutowiredAnnotationBeanPostProcessor,
 			// ConfigurationClassPostProcessor,
 			// CommonAnnotationBeanPostProcessor

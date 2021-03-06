@@ -518,7 +518,7 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 		//又来一记委托模式，BeanDefinitionDocumentReader委托这个类进行document的解析
 		BeanDefinitionDocumentReader documentReader = createBeanDefinitionDocumentReader();
 		int countBefore = getRegistry().getBeanDefinitionCount();
-		//主要看这个方法，createReaderContext(resource) XmlReaderContext上下文，封装了XmlBeanDefinitionReader对象
+		//主要看这个方法，createReaderContext(resource) XmlReaderContext 上下文，封装了XmlBeanDefinitionReader对象
 		documentReader.registerBeanDefinitions(doc, createReaderContext(resource));
 		return getRegistry().getBeanDefinitionCount() - countBefore;
 	}

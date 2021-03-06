@@ -174,7 +174,7 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 	private String[] dependsOn;
 
 	/**
-	 * 采用xml格式配置bean时，将<bean/> 元素的autowire-candidate属性设置为false，这样
+	 * 采用xml格式配置bean时，将<bean/> 元素的 autowire-candidate 属性设置为false，这样
 	 * 容器在查找自动装配对象的时候，将不考虑该bean，即它不会被考虑作为其它bean自动装配的后选择，但是gaibean本身还是可以使用自动装配来注入其它bean
 	 */
 	private boolean autowireCandidate = true;
@@ -212,7 +212,7 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 	/*用于封装lookup-method和replaced-method的标签信息*/
 	@Nullable
 	private MethodOverrides methodOverrides;
-	/*对应bean标签的init-method属性*/
+	/*对应bean标签的 init-method 属性*/
 	@Nullable
 	private String initMethodName;
 	/*bean销毁的时候*/

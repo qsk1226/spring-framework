@@ -70,6 +70,9 @@ final class PostProcessorRegistrationDelegate {
 			// 实现 BeanDefinitionRegistryPostProcessor 接口的 bean
 			List<BeanDefinitionRegistryPostProcessor> registryProcessors = new ArrayList<>();
 
+			/**
+			 * springboot 在使用，beanFactoryPostProcessors 在spring 框架中默认是空集合
+			 */
 			for (BeanFactoryPostProcessor postProcessor : beanFactoryPostProcessors) {
 				// BeanDefinitionRegistryPostProcessor
 				if (postProcessor instanceof BeanDefinitionRegistryPostProcessor) {
@@ -84,7 +87,7 @@ final class PostProcessorRegistrationDelegate {
 
 			// Do not initialize FactoryBeans here: We need to leave all regular beans uninitialized to let the bean factory post-processors apply to them!
 			// Separate between BeanDefinitionRegistryPostProcessors that implement PriorityOrdered, Ordered, and the rest.
-			// 不要在这里初始化factorybean : 我们需要保持所有常规bean未初始化，以便让bean工厂后处理器应用于它们!
+			// 不要在这里初始化 factorybean : 我们需要保持所有常规bean未初始化，以便让bean工厂后处理器应用于它们!
 			// 独立于beandefinitionregistrypostprocessor，实现priorityor, Ordered，和其他。
 			List<BeanDefinitionRegistryPostProcessor> currentRegistryProcessors = new ArrayList<>();
 
@@ -222,7 +225,7 @@ final class PostProcessorRegistrationDelegate {
 	public static void registerBeanPostProcessors(
 			ConfigurableListableBeanFactory beanFactory, AbstractApplicationContext applicationContext) {
 
-		/* 拿到工程里面所有实现了BeanPostProcessor接口的类，获取到BeanDefinition的名称 */
+		/* 拿到工程里面所有实现了BeanPostProcessor 接口的类，获取到 BeanDefinition 的名称 */
 		String[] postProcessorNames = beanFactory.getBeanNamesForType(BeanPostProcessor.class, true, false);
 
 		// Register BeanPostProcessorChecker that logs an info message when
@@ -238,7 +241,7 @@ final class PostProcessorRegistrationDelegate {
 		List<String> orderedPostProcessorNames = new ArrayList<>();
 		List<String> nonOrderedPostProcessorNames = new ArrayList<>();
 
-		//提前实例化BeanPostProcessor类型的bean，然后bean进行排序
+		//提前实例化 BeanPostProcessor 类型的bean，然后bean进行排序
 		for (String ppName : postProcessorNames) {
 			if (beanFactory.isTypeMatch(ppName, PriorityOrdered.class)) {
 

@@ -265,7 +265,9 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 		for (String beanName : candidateNames) {
 			BeanDefinition beanDef = registry.getBeanDefinition(beanName);
 
-
+			// org.springframework.context.annotation.ConfigurationClassUtils.candidateIndicators
+			// full ---> Configuration 注解
+			// lit ---> Component、ComponentScan、Import、importResource
 			if (ConfigurationClassUtils.isFullConfigurationClass(beanDef) ||
 					ConfigurationClassUtils.isLiteConfigurationClass(beanDef)) {
 
@@ -310,7 +312,7 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 		if (this.environment == null) {
 			this.environment = new StandardEnvironment();
 		}
-		// 这个类很重要,@ComponentScan、@Configuration支持
+		// 这个类很重要 @ComponentScan、@Configuration支持
 		// Parse each @Configuration class
 		ConfigurationClassParser parser = new ConfigurationClassParser(
 				this.metadataReaderFactory, this.problemReporter, this.environment,

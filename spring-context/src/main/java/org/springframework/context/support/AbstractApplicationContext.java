@@ -592,7 +592,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 			 * 		    d、调用类的init方法，init方法是注册了各种自定义标签的解析类
 			 * 		    e、根据namespaceUri找到对应的解析类，然后调用paser方法完成标签解析
 			 * 		    f、注册了几个比较重要的 BeanPostProcessor 类
-			 * 3、把解析出来的xml标签封装成BeanDefinition对象
+			 * 3、把解析出来的xml标签封装成 BeanDefinition 对象
 			 * 4、返回的是 DefaultListableBeanFactory，
 			 * ConfigurableListableBeanFactory 是 DefaultListableBeanFactory 的父类
 			 *

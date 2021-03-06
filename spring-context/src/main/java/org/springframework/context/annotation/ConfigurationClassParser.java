@@ -265,9 +265,9 @@ class ConfigurationClassParser {
 		}
 
 		// Process any @PropertySource annotations
-		for (AnnotationAttributes propertySource : AnnotationConfigUtils.attributesForRepeatable(
-				sourceClass.getMetadata(), PropertySources.class,
-				org.springframework.context.annotation.PropertySource.class)) {
+		for (AnnotationAttributes propertySource :
+				AnnotationConfigUtils.attributesForRepeatable(sourceClass.getMetadata(),
+						PropertySources.class, org.springframework.context.annotation.PropertySource.class)) {
 			if (this.environment instanceof ConfigurableEnvironment) {
 				processPropertySource(propertySource);
 			}
@@ -278,8 +278,7 @@ class ConfigurationClassParser {
 		}
 
 		// 处理原件扫描类 @ComponentScans 和 ComponentScan 注解
-		Set<AnnotationAttributes> componentScans = AnnotationConfigUtils.attributesForRepeatable(
-				sourceClass.getMetadata(), ComponentScans.class, ComponentScan.class);
+		Set<AnnotationAttributes> componentScans = AnnotationConfigUtils.attributesForRepeatable(sourceClass.getMetadata(), ComponentScans.class, ComponentScan.class);
 
 		if (!componentScans.isEmpty() &&
 				!this.conditionEvaluator.shouldSkip(sourceClass.getMetadata(), ConfigurationPhase.REGISTER_BEAN)) {
@@ -561,11 +560,11 @@ class ConfigurationClassParser {
 						// Candidate class is an ImportSelector -> delegate to it to determine imports
 						Class<?> candidateClass = candidate.loadClass();
 						ImportSelector selector = BeanUtils.instantiateClass(candidateClass, ImportSelector.class);
-						ParserStrategyUtils.invokeAwareMethods(
-								selector, this.environment, this.resourceLoader, this.registry);
+
+						ParserStrategyUtils.invokeAwareMethods(selector, this.environment, this.resourceLoader, this.registry);
+
 						if (selector instanceof DeferredImportSelector) {
-							this.deferredImportSelectorHandler.handle(
-									configClass, (DeferredImportSelector) selector);
+							this.deferredImportSelectorHandler.handle(configClass, (DeferredImportSelector) selector);
 						}
 						else {
 							String[] importClassNames = selector.selectImports(currentSourceClass.getMetadata());
@@ -753,8 +752,8 @@ class ConfigurationClassParser {
 		 * @param importSelector the selector to handle
 		 */
 		public void handle(ConfigurationClass configClass, DeferredImportSelector importSelector) {
-			DeferredImportSelectorHolder holder = new DeferredImportSelectorHolder(
-					configClass, importSelector);
+			DeferredImportSelectorHolder holder = new DeferredImportSelectorHolder(configClass, importSelector);
+
 			if (this.deferredImportSelectors == null) {
 				DeferredImportSelectorGroupingHandler handler = new DeferredImportSelectorGroupingHandler();
 				handler.register(holder);
@@ -804,8 +803,7 @@ class ConfigurationClassParser {
 		public void processGroupImports() {
 			for (DeferredImportSelectorGrouping grouping : this.groupings.values()) {
 				grouping.getImports().forEach(entry -> {
-					ConfigurationClass configurationClass = this.configurationClasses.get(
-							entry.getMetadata());
+					ConfigurationClass configurationClass = this.configurationClasses.get(entry.getMetadata());
 					try {
 						processImports(configurationClass, asSourceClass(configurationClass),
 								asSourceClasses(entry.getImportClassName()), false);
