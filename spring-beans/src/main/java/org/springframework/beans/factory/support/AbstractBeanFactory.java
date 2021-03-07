@@ -44,18 +44,7 @@ import org.springframework.beans.PropertyEditorRegistrySupport;
 import org.springframework.beans.SimpleTypeConverter;
 import org.springframework.beans.TypeConverter;
 import org.springframework.beans.TypeMismatchException;
-import org.springframework.beans.factory.BeanCreationException;
-import org.springframework.beans.factory.BeanCurrentlyInCreationException;
-import org.springframework.beans.factory.BeanDefinitionStoreException;
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.BeanFactoryUtils;
-import org.springframework.beans.factory.BeanIsAbstractException;
-import org.springframework.beans.factory.BeanIsNotAFactoryException;
-import org.springframework.beans.factory.BeanNotOfRequiredTypeException;
-import org.springframework.beans.factory.CannotLoadBeanClassException;
-import org.springframework.beans.factory.FactoryBean;
-import org.springframework.beans.factory.NoSuchBeanDefinitionException;
-import org.springframework.beans.factory.SmartFactoryBean;
+import org.springframework.beans.factory.*;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.BeanDefinitionHolder;
 import org.springframework.beans.factory.config.BeanExpressionContext;
@@ -308,14 +297,14 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 			//该方法是 FactoryBean 接口的调用入口
 			bean = getObjectForBeanInstance(sharedInstance, name, beanName, null);
 		} else {
-			//如果singletonObjects 缓存里面没有，则走下来
-			//如果是scope 是Prototype的，校验是否有出现循环依赖，如果有则直接报错
+			//如果 singletonObjects 缓存里面没有，则走下来
+			//如果是scope 是 Prototype 的，校验是否有出现循环依赖，如果有则直接报错
 			if (isPrototypeCurrentlyInCreation(beanName)) {
 				throw new BeanCurrentlyInCreationException(beanName);
 			}
 
 			// Check if bean definition exists in this factory.
-			// 检查父类BeanFactory中时候包含次beanName，
+			// 检查父类 BeanFactory 中是否包含次beanName，
 			BeanFactory parentBeanFactory = getParentBeanFactory();
 			if (parentBeanFactory != null && !containsBeanDefinition(beanName)) {
 				// Not found -> check parent.
@@ -377,16 +366,19 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 						5、bea 实例化之后，将bean放入到singletonObjects容器中
 						6、创建对象成功时，把对象缓存到singletonObjects缓存中,bean创建完成时放入一级缓存
 					 */
-					sharedInstance = getSingleton(beanName, () -> {
-						try {
-							// 实例化的和新方法
-							return createBean(beanName, mbd, args);
-						} catch (BeansException ex) {
-							// Explicitly remove instance from singleton cache: It might have been put there
-							// eagerly by the creation process, to allow for circular reference resolution.
-							// Also remove any beans that received a temporary reference to the bean.
-							destroySingleton(beanName);
-							throw ex;
+					sharedInstance = getSingleton(beanName, new ObjectFactory<Object>() {
+						@Override
+						public Object getObject() throws BeansException {
+							try {
+								// 实例化的和新方法
+								return AbstractBeanFactory.this.createBean(beanName, mbd, args);
+							} catch (BeansException ex) {
+								// Explicitly remove instance from singleton cache: It might have been put there
+								// eagerly by the creation process, to allow for circular reference resolution.
+								// Also remove any beans that received a temporary reference to the bean.
+								AbstractBeanFactory.this.destroySingleton(beanName);
+								throw ex;
+							}
 						}
 					});
 					// 获取给定bean实例的对象，对于FactoryBean，要么是bean实例本身，要么是它创建的对象。

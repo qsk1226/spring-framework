@@ -294,7 +294,7 @@ public class CommonAnnotationBeanPostProcessor extends InitDestroyAnnotationBean
 
 	/*
 	* 1、扫描类里面的属性或者方法
-	* 2、判断属性或者方法上面是否有@PostConstruct @PreDestroy @Resource注解
+	* 2、判断属性或者方法上面是否有 @PostConstruct @PreDestroy @Resource 注解
 	* 3、如果有注解的属性或者方法，包装成一个类
 	* */
 	@Override

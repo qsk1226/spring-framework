@@ -495,7 +495,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			mbdToUse.setBeanClass(resolvedClass);
 		}
 
-		// Prepare method overrides.
+		// lookup 属性的解析，Prepare method overrides.
 		try {
 			/*lookup标签的解析*/
 			mbdToUse.prepareMethodOverrides();
@@ -503,11 +503,11 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			throw new BeanDefinitionStoreException(mbdToUse.getResourceDescription(),
 					beanName, "Validation of method overrides failed", ex);
 		}
-
+		// TargetSource 接口的运用
 		try {
 
 			/**
-			 * TargetSource接口的运用，可以在用一个类实现该接口，然后在里面定义实例化对象的方式，然后返回
+			 * TargetSource 接口的运用，可以在用一个类实现该接口，然后在里面定义实例化对象的方式，然后返回
 			 * 也就是说不需要spring帮助我们实例化对象
 			 *
 			 *
@@ -566,11 +566,11 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			// 未完成的 FactoryBean 实例的缓存: 到 BeanWrapper 的 FactoryBean 名称
 			instanceWrapper = this.factoryBeanInstanceCache.remove(beanName);
 		}
+		/**
+		 * 创建实例,,重点看，重要程度：5
+		 * 为指定的bean创建一个新实例，使用适当的实例化策略:工厂方法、构造函数自动装配或简单实例化。
+		 */
 		if (instanceWrapper == null) {
-			/**
-			 * 创建实例,,重点看，重要程度：5
-			 * 为指定的bean创建一个新实例，使用适当的实例化策略:工厂方法、构造函数自动装配或简单实例化。
-			 */
 			instanceWrapper = createBeanInstance(beanName, mbd, args);
 		}
 		final Object bean = instanceWrapper.getWrappedInstance();
@@ -602,7 +602,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 
 		// Eagerly cache singletons to be able to resolve circular references
 		// even when triggered by lifecycle interfaces like BeanFactoryAware.
-		//是否	单例bean提前暴露
+		//是否	单例 bean 提前暴露
 		boolean earlySingletonExposure = (mbd.isSingleton() && this.allowCircularReferences && isSingletonCurrentlyInCreation(beanName));
 		if (earlySingletonExposure) {
 			if (logger.isTraceEnabled()) {
@@ -1093,6 +1093,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			if (bp instanceof MergedBeanDefinitionPostProcessor) {
 				MergedBeanDefinitionPostProcessor bdp = (MergedBeanDefinitionPostProcessor) bp;
 				// @PostConstruct，@PreDestroy,@Resource
+				// @Autowired,@Value
 				bdp.postProcessMergedBeanDefinition(mbd, beanType, beanName);
 			}
 		}
@@ -1206,7 +1207,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		}
 
 		// Candidate constructors for autowiring?
-		//寻找当前正在实例化的bean中有@Autowired注解的构造函数
+		//寻找当前正在实例化的bean中有 @Autowired 注解的构造函数
 		Constructor<?>[] ctors = determineConstructorsFromBeanPostProcessors(beanClass, beanName);
 		if (ctors != null || mbd.getResolvedAutowireMode() == AUTOWIRE_CONSTRUCTOR ||
 				mbd.hasConstructorArgumentValues() || !ObjectUtils.isEmpty(args)) {
